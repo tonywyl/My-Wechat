@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <img src="https://login.weixin.qq.com/qrcode/{{uuid}}" id="img" alt="" style="height: 400px; width: 400px;">
+
+    </div>
+
+
+
+<script src="/static/jquery/jquery-3.2.1.js"></script>
+<script>
+        //向自己后台发送请求
+        $(function () {
+            checkLogin();
+        });
+
+        function checkLogin() {
+            $.ajax({
+                url:'/check_login.html',
+                type:'get',
+                data:{},
+                dataType:'JSON',
+                success:function (arg) {
+                    if(arg.code==408){
+                        checkLogin();
+                    }
+                    else if(arg.code==201){
+                        console.log(arg.code);
+                        //#如果扫码成功，头像从后台获取
+                        $('#img').attr('src',arg.data);
+                        checkLogin();
+                    }
+                    else{
+                        location.href='/index.html'
+                    }
+                }
+            }
+        )
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<h1>个人信息</h1>
+{{ request.session.INIT_DICT.User.NickName }}
+
+<img src="https://wx.qq.com{{ request.session.INIT_DICT.User.HeadImgUrl }}">
+<img src="{{ img }}" >
+
+
+<h1>最近联系人</h1>
+{% for user in request.session.INIT_DICT.ContactList %}
+    用户名：{{ user.UserName }}
+    别名：{{ user.NickName }}
+{%  endfor %}
+
+
+<div>
+<a href="/sendmsg.html">发送消息</a>
+
+        内容:<input type="text" name="content" id="sendmsg">
+        send_to: <input type="text" name="to_user" id="to_user">
+        <input type="button" onclick="sendMsg();" value="发送">
+
+
+
+</div>
+<div>
+    接收消息：
+    <textarea name="recvmsg"></textarea>
+</div>
+
+<h1>
+    联系人列表
+    <!--
+    https://wx2.qq.com/cgi-bin/mmwebwx-bin/webwxbatchgetcontact?type=ex&r=1504009768584&lang=zh_CN&pass_ticket=z7D1eBKdZoudMyFDCEs4e5ZlLUcCVMdzN6kWCNVMcPmiiIrVuOVp7gmz%252FLJfXXvu
+    -->
+</h1>
+<h1>公众号信息</h1>
+
+
+<script src="/static/jquery/jquery-3.2.1.js"></script>
+<script>
+    $(function () {
+        getmsg()
+
+    })
+    function getmsg() {
+        $.ajax({
+            url:'/getmsg.html',
+            type:'GET',
+            success:function (arg) {
+                console.log(arg)
+
+            }
+        })
+    }
+
+    function sendMsg() {
+        $.ajax({
+            url:"/sendmsg.html",
+            type:'POST',
+            data:{'sendmsg':$('#sendmsg').val(),'to_user':$('#to_user').val(),'csrfmiddlewaretoken':"{{ csrf_token }}"},
+            success:function (arg) {
+                console.log(arg)
+            }
+        })
+    }
+
+
+
+</script>
+
+</body>
+</html>
